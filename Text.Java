@@ -87,22 +87,22 @@ public class Text implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String s = e.getActionCommand(); 
+		String option = e.getActionCommand(); 
 		
-		if(s.equals("Exit")) {
+		if(option.equals("Exit")) {
 			System.exit(0);
 		}
-		else if(s.equals("About")) {
+		else if(option.equals("About")) {
 			JOptionPane.showMessageDialog(frame.getComponent(0), "This is a text editor, made by Patrick K, Email: patrickkhoury0gmail.com");	
 		}
-		else if(s.equals("Print")) {
+		else if(option.equals("Print")) {
 			try {
 				textBox.print();
 			} catch (PrinterException e1) {
 				e1.printStackTrace();
 			}
 		}
-		else if(s.equals("Save")) {//******************Make sure its right
+		else if(option.equals("Save")) {//******************Make sure its right
 			String getFileName = JOptionPane.showInputDialog(null, "Enter your directory name with a file name at the end.\nEx: /Users/userName/Desktop/one.txt");	
 			FileWriter outputStream = null;
 			try {
@@ -117,7 +117,7 @@ public class Text implements ActionListener{
 				e1.printStackTrace();
 			}
 		}
-		else if(s.equals("Open File...")) {
+		else if(option.equals("Open File...")) {
 			String getFileName = JOptionPane.showInputDialog(null, "Enter your directory name with a file name at the end.\nEx: /Users/userName/Desktop/one.txt");
 			Scanner inputStream = null;
 			try {
@@ -138,16 +138,16 @@ public class Text implements ActionListener{
 			
 			
 		}
-		else if(s.equals("Select All")) {
+		else if(option.equals("Select All")) {
 			textBox.selectAll();
 		}
-		else if(s.equals("Copy")) {
+		else if(option.equals("Copy")) {
 			textBox.copy();
 		}
-		else if(s.equals("Cut")) {
+		else if(option.equals("Cut")) {
 			textBox.cut();
 		}
-		else if(s.equals("Paste")) {
+		else if(option.equals("Paste")) {
 			textBox.paste();
 		}
 		
