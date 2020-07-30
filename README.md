@@ -3,4 +3,6 @@ Text Editor GUI made in Java Swing. Has many options in the top menu such as: Sp
 
 *New SpellCheck option available in Edit menu. Uses Hash Tables to store the info about the word to the dictionary.
 
+*Download edu.princeton.cs.algs4 from Priceton CS website to get code running becasue code includes referenced libraries.
+
 *The File Reading options show examples for MAC OS, if not working on other OS might need to make the nessisary changes to find the file and find its directory.
