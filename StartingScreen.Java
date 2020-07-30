@@ -23,6 +23,9 @@ public class startingScreen{
 		frame.add(panel, BorderLayout.CENTER);
 		frame.setBackground(Color.lightGray);
 		frame.setVisible(true);
+		frame.setLocationRelativeTo(null);
+		frame.setResizable(false);
+		frame.revalidate();
 		
 		
 		JLabel label = new JLabel("Welcome to Text Editor", JLabel.CENTER);
