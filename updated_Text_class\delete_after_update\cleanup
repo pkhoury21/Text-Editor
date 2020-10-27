@@ -46,7 +46,6 @@ public class Text implements ActionListener{
 	private JFrame frame;
 	private JPanel panel;
 	private static JTextPane textBox;
-	//private static JTextArea textBox;
 	JMenuItem exit;
 
 	static SquigglePainter red = new SquigglePainter(Color.RED);
@@ -54,19 +53,14 @@ public class Text implements ActionListener{
 	LinkedStack<String> temp = new LinkedStack<String>();
 	LinkedStack<String> list = new LinkedStack<String>();
 	
-
-
-    static Collector t = new Collector();
-	
 	int count = 0;
 	
 	public Text() {
 		frame = new JFrame("Patricks Text Editor");
 		panel = new JPanel();
 		textBox = new JTextPane();
-		//textBox = new JTextArea();
 		
-		panel.setBorder(BorderFactory.createEmptyBorder(30,30,10,30));//maybe make it to fit whole frame instead
+		panel.setBorder(BorderFactory.createEmptyBorder(30,30,10,30));
 		panel.setLayout(new GridLayout(0,1));
 		panel.setBackground(Color.white);
 		
@@ -130,10 +124,8 @@ public class Text implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String option = e.getActionCommand(); 
-		JMenuItem choice = (JMenuItem) e.getSource();
 		
-		//if(option.equals("Exit")) {
-		if(choice == exit) {//** can do this way too, might be better...
+		if(option.equals("Exit")) {
 			System.exit(0);
 		}
 		else if(option.equals("About")) {
@@ -153,19 +145,17 @@ public class Text implements ActionListener{
 				       
 				@Override
 				public void insertUpdate(final DocumentEvent e) {
-				//When you type a new letter, we want to (lets say) clear all the styles from the whole document...
 					clearStyle(e);
 				}
 				
 				@Override
 				public void removeUpdate(final DocumentEvent e) {
-				    //When you erase a letter, we want to (lets say) clear all styles from the whole document...
 				    clearStyle(e);
 				}
 				
 				@Override
 				public void changedUpdate(final DocumentEvent e) {
-				    //When changing the style of the document, we want to do nothing else (but the change will happen).
+				    //Skip but still update...
 				}
 			});
 			
@@ -175,77 +165,57 @@ public class Text implements ActionListener{
 			final int start = textBox.getSelectionStart();
 			final int end = textBox.getSelectionEnd();
 			doc.setCharacterAttributes(start, end - start, sas, true);
-			//System.out.println(check.getInfo("word"));
-			//^use to get correct spelling
 			
 			int index = 0;
 			String at = "";
 			String word = "";
-			System.out.println("Doc length is: " + doc.getLength());
 			while(index < doc.getLength()) {
 				try {
 					at = doc.getText(index, 1);
-					System.out.println(at);//gets character at that position,
-				} catch (BadLocationException e1) {//^^ can use later for once get to space check if its in hashSet if not highlihht red then use other class for options similar to it in hashSet...		
-					// TODO Auto-generated catch block
+				} catch (BadLocationException e1) {
 					e1.printStackTrace();
 				}
 				
-				System.out.println("Going through" + index);
-				if(isPunctuation(at)) { //add for "quotes" too...
-					if(isPunctuation(word)){//another punctuation skip...//Clean this up later and add rest...
-						word = "";//^^If previous was punctuation, check by what's saved in word...
-						//continue;//work on if I see puncutation
+				if(isPunctuation(at)) { 
+					if(isPunctuation(word)){
+						word = "";
 						}
 					else {
-						System.out.println("My word is: " + word);
-						//check the word so far 
 						checkWord(check, word, list, temp, index, doc, sas, at);
-						//then reset word variable
 						word = "";
 					}
 				}
-				else if(index == doc.getLength()-1) {//If at last character in all of writing...
-					System.out.println("Or here:" + word + ":");
-					if(at.equals("\n")) {//In-case user enters new line as last character("\n")...
+				else if(index == doc.getLength()-1) {
+					if(at.equals("\n")) {
 						checkWord(check, word, list, temp, index, doc, sas, at);
-						//then reset word variable
 						word = "";
 					}
 					else {
 						try {
 							checkWord(check, word + doc.getText(index, 1), list, temp, index, doc, sas, at);//using to get last character...
 						} catch (BadLocationException e1) {
-							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
 					}
 				}
-				else if(at.equals("\n")) {//If going to next line//DONE with this condition
-					System.out.println("get");
+				else if(at.equals("\n")) {
 					if(index == doc.getLength()-1) {
-						System.out.println("1");
 						checkWord(check, word, list, temp, index, doc, sas, at);
 					}
-					else if(word != "") {//If its a word and not blank
-						System.out.println("2");
+					else if(word != "") {
 						checkWord(check, word, list, temp, index, doc, sas, at);
 					}
 					else {//if it's a empty string...
-						System.out.println("----Its blank" + word);
+						//Skip
 					}
 					
 					word = "";
 				}
-				else if(at.equals(" ")) {//DONE with this condition
-					System.out.println("My word is:" + word + ":");
-					//check the word so far
+				else if(at.equals(" ")) {
 					if(word.equals("")) {
-						System.out.println("Skipped here");
-						//skip it
+						//Skip
 					}
 					else {
-						System.out.println("HIT");
 						checkWord(check, word, list, temp, index, doc, sas, at);
 					}
 					//then reset word variable
@@ -258,7 +228,7 @@ public class Text implements ActionListener{
 			}
 			
 			textBox.addMouseListener(new MouseAdapter() {
-				private boolean pendingPopUp = false; //Indicates whether we have already a popup popped up...
+				private boolean pendingPopUp = false;
 	                
 				private void maybePop(final MouseEvent mevt) {
                     if (mevt.isPopupTrigger()) {
@@ -288,7 +258,6 @@ public class Text implements ActionListener{
 	        		if (SwingUtilities.isRightMouseButton(mevt)) {
 	        			try {
 	        				final StyledDocument doc = textBox.getStyledDocument();
-	                        //Get the location of the document where the user clicked:
 	                        final int offset = textBox.viewToModel(mevt.getPoint());
 	                         
 	                        //Find what word is at the location of the document where the user clicked:
@@ -299,32 +268,21 @@ public class Text implements ActionListener{
                             textBox.setSelectionStart(start);
                             textBox.setSelectionEnd(end);
                             
-                            //Obtain the value of the selected word:
                             final String Atword = doc.getText(start, end - start);
-                            System.out.println("AYYYYYE");
-                            System.out.println(Atword);
                             
-                            t.setAt(Atword);//class to save word that we are at...
-                            //^remove this line and probbaly the whole t class later when doing clean up code...
-                            
-                            System.out.println("Hey PRESSED______--------");
-                            addWordButton(check, Atword, list, temp);//Here working rn...
-                            
-                            System.out.println("The clicked word is: " + Atword);//What word was clicked on...
+                            addWordButton(check, Atword, list, temp);
 
-                            //Create the contents of the popup:
+                            //Create the popup:
                             final JPanel popupPanel = new JPanel();
 
-                            //Create the alternative words (via JButtons):
-                            final int cnt = list.size();//4
+                            //Create the words
+                            final int cnt = list.size();
                             final ArrayList<JButton> words = new ArrayList<>();
-                            //for (int i = 0; i < cnt; ++i) {
                             for (String string : list) {
-                                final JButton button = new JButton(string);//word + (i + 1)
+                                final JButton button = new JButton(string);
                                 popupPanel.add(button);
                                 words.add(button);
-                                //System.out.println("Maybe going through: " + string);
-                                list.pop();//&-
+                                list.pop();
                             }
                             
                             final JButton addToDictionary = new JButton("Add to Dictionary");
@@ -336,20 +294,16 @@ public class Text implements ActionListener{
                             final JButton cancel = new JButton("Cancel");
                             popupPanel.add(cancel);
 
-                            //Create the popup itself:
                             final Popup popup = PopupFactory.getSharedInstance().getPopup(textBox, popupPanel, mevt.getXOnScreen(), mevt.getYOnScreen());
 
-                            //Hook action listenere to the word and cancel buttons:
+                            //Add action listener to the word and cancel
                             words.forEach(button -> button.addActionListener(e -> {
                                 try {
-                                    //Get the text of that button (it is going to be the new word):
                                     final String newWord = ((JButton) e.getSource()).getText();
                                     
-                                    //Replace the old text with the new one:
                                     doc.remove(start, end - start);
                                     doc.insertString(start, newWord, null);
                                     
-                                    //Prepare caret position, so the user can keep on writing:
                                     textBox.setCaretPosition(start + newWord.length());
                                 }
                                 catch (final BadLocationException | RuntimeException x) {
@@ -373,7 +327,6 @@ public class Text implements ActionListener{
 									doc.remove(start, end - start);
 									doc.insertString(start, Atword, null);
 								} catch (BadLocationException e1) {
-									// TODO Auto-generated catch block
 									e1.printStackTrace();
 								}
                                 popup.hide();
@@ -389,7 +342,6 @@ public class Text implements ActionListener{
 									doc.remove(start, end - start);
 									doc.insertString(start, Atword, null);
 								} catch (BadLocationException e1) {
-									// TODO Auto-generated catch block
 									e1.printStackTrace();
 								}
                                 popup.hide();
@@ -408,7 +360,7 @@ public class Text implements ActionListener{
                 }
                 
             });
-			check.clearCorrections();//Need this...
+			check.clearCorrections();
 			frame.revalidate();
 		}
 		else if(option.equals("Print")) {
@@ -418,14 +370,12 @@ public class Text implements ActionListener{
 				e1.printStackTrace();
 			}
 		}
-		else if(option.equals("Save")) {//******************Make sure its right
-			//String getFileName = JOptionPane.showInputDialog(null, "Enter your directory name with a file name at the end.\nEx: /Users/userName/Desktop/one.txt");	
+		else if(option.equals("Save")) {	
 			JFileChooser fileChooser = new JFileChooser();
 			int response = fileChooser.showSaveDialog(null);
 			String getFileName = "";
 			if(response == JFileChooser.APPROVE_OPTION) {
 				getFileName = fileChooser.getSelectedFile().toString();
-				//System.out.println("Path is: " + s);
 			}
 			else {
 				System.out.println("Could not find file");
@@ -434,7 +384,7 @@ public class Text implements ActionListener{
 			FileWriter outputStream = null;
 			try {
 				outputStream = new FileWriter(new File(getFileName), false);				
-			System.out.println("File found");//^/Users/userName/Desktop/one.txt
+			System.out.println("File found");
 			
 			String getText = textBox.getText();
 			outputStream.write(getText);
@@ -452,14 +402,10 @@ public class Text implements ActionListener{
 			String getFileName = "";
 			if(response == JFileChooser.APPROVE_OPTION) {
 				getFileName = fileChooser.getSelectedFile().toString();
-				//System.out.println("Path is: " + s);
 			}
 			else {
 				System.out.println("Could not find file");
 			}
-			//--
-			//String getFileName = JOptionPane.showInputDialog(null, "Enter your directory name with a file name at the end.\nEx: /Users/userName/Desktop/one.txt");		
-			//--
 			Scanner inputStream = null;
 			try {
 				inputStream = new Scanner(new FileInputStream(getFileName));
@@ -472,7 +418,6 @@ public class Text implements ActionListener{
 			String line = "";
 			while (inputStream.hasNextLine()) {
 				line = line + inputStream.nextLine()  + "\n" ;
-				System.out.println(line);//using for debugging
 			}
 			textBox.setText(line);
 			inputStream.close();
@@ -516,28 +461,18 @@ public class Text implements ActionListener{
     }
     
     public static void checkWord(SpellChecker check, String word, LinkedStack list, LinkedStack temp, int index, StyledDocument doc, SimpleAttributeSet sas, String at) {
-    	if(check.getInfo(word.toLowerCase())) {//Need toLower like this to check incase they are capital...
-			System.out.println(word + " Spelled CORRECT!!!!!!!!");//When calling checkInfo above its also adding the words to the Dictionary too...
-		}
+    	if(check.getInfo(word.toLowerCase())) {
+    		//Spelled correct
+    	}
 		else {
-			for (Object object : check.possibleWords) {//for testing delete later
-				System.out.println("Pt 2: " + object);
-			}
-			
-			System.out.println("Spelled Wrong: " + word + " @ last condition");
-			System.out.println("index:" + index + " & word length:" + word.length());
-			
 			if(!at.equals(" ")) {
-				if(!at.equals("\n")) {//If there is a new line make sure to move everything up one spot to fit whole word...
+				if(!at.equals("\n")) {
 					index+=1;
 				}
 			}
 			try
 			{
-				//doc.setCharacterAttributes(index-word.length(), index, sas, true);
-			    //textBox.getHighlighter().addHighlight(0, 4, red);
-				textBox.getHighlighter().addHighlight(index-word.length(), index, red);//had index+1 on 2nd parameter...
-				//problem could be that keep moving between textBox and doc maybe make it as one...
+				textBox.getHighlighter().addHighlight(index-word.length(), index, red);
 			}
 			catch(BadLocationException ble) {
 				System.out.println(ble.getMessage());
@@ -549,27 +484,20 @@ public class Text implements ActionListener{
    
     public static void addWordButton(SpellChecker check, String word,  LinkedStack list, LinkedStack temp) {
     	check.clearCorrections();
-		//if(t.getAt().equals(word)) {
-		check.getInfo(t.getAt());
-			
-		System.out.println("The class is " + t.getAt());
+		check.getInfo(word);
 		
-			temp = check.getCorrections();//gets corrections for words...
-			
-			for (Object string : temp) {//Worked when made Object then casted to String, had error: "Type mismatch: cannot convert from element type Object to String" 		
-				if(check.getInfo((String)string) ) {
-					System.out.println("Test to see right words... " + string);
-					list.push(string);
-					//list.push("patrickz");
-				}
-				else {
-					continue;
-				}
-				temp.pop();
+		temp = check.getCorrections();
+		
+		for (Object string : temp) {
+			if(check.getInfo((String)string) ) {
+				list.push(string);
 			}
-		//}
+			else {
+				continue;
+			}
+			temp.pop();
+		}
     }
-    
     
 }
 
