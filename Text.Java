@@ -499,4 +499,3 @@ public class Text implements ActionListener{
     }
     
 }
-
