@@ -336,7 +336,6 @@ public class Text implements ActionListener{
                             });
                         
                             addToDictionary.addActionListener(e -> {
-                            	System.out.println(Atword);
                             	check.dictionary.put(Atword, Atword);//Adds word to the dictionary...
                             	try {
 									doc.remove(start, end - start);
