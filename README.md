@@ -5,6 +5,8 @@ Text Editor GUI made in Java Swing. Has many options in the top menu such as: Sp
 
 *Download edu.princeton.cs.algs4 from Priceton CS website to get code running becasue code includes referenced libraries.
 
+*SwigglePainter is referenced from https://tips4java.wordpress.com/2008/10/28/rectangle-painter/, is used to make red highlight color have Swiggle effect
+
 *The File Reading options show examples for MAC OS, if not working on other OS might need to make the nessisary changes to find the file and find its directory.
 
 <img width="348" alt="Screen Shot 2020-07-30 at 12 13 30 PM" src="https://user-images.githubusercontent.com/32467010/88971484-d3332e80-d268-11ea-9d19-3caf4028d843.png">
