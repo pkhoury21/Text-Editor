@@ -172,56 +172,21 @@ public class Text implements ActionListener{
 			while(index < doc.getLength()) {
 				try {
 					at = doc.getText(index, 1);
-				} catch (BadLocationException e1) {
+				} catch (BadLocationException e1) {	
+					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				
-				if(isPunctuation(at)) { 
-					if(isPunctuation(word)){
-						word = "";
-						}
-					else {
-						checkWord(check, word, list, temp, index, doc, sas, at);
-						word = "";
-					}
-				}
-				else if(index == doc.getLength()-1) {
-					if(at.equals("\n")) {
-						checkWord(check, word, list, temp, index, doc, sas, at);
-						word = "";
-					}
-					else {
-						try {
-							checkWord(check, word + doc.getText(index, 1), list, temp, index, doc, sas, at);//using to get last character...
-						} catch (BadLocationException e1) {
-							e1.printStackTrace();
-						}
-					}
-				}
-				else if(at.equals("\n")) {
-					if(index == doc.getLength()-1) {
-						checkWord(check, word, list, temp, index, doc, sas, at);
-					}
-					else if(word != "") {
-						checkWord(check, word, list, temp, index, doc, sas, at);
-					}
-					else {//if it's a empty string...
-						//Skip
-					}
+				if(at.equals(" ") || isPunctuation(at)) {//add at.equals("") for if someone doesnt have punctation at the end...
+					//check the word now...
+					System.out.println("my word is " + word);
+					checkWord(check, word, list, temp, index, doc, sas, at);
+					//reset word after
+					word = "";
 					
-					word = "";
 				}
-				else if(at.equals(" ")) {
-					if(word.equals("")) {
-						//Skip
-					}
-					else {
-						checkWord(check, word, list, temp, index, doc, sas, at);
-					}
-					//then reset word variable
-					word = "";
-				}
-				else {
+				else{ //if character/alphabetical letter
+					//keep going increasing the temp word until reached full word
 					word += at;
 				}
 				index++;
@@ -463,22 +428,15 @@ public class Text implements ActionListener{
     	if(check.getInfo(word.toLowerCase())) {
     		//Spelled correct
     	}
-		else {
-			if(!at.equals(" ")) {
-				if(!at.equals("\n")) {
-					index+=1;
-				}
-			}
-			try
-			{
-				textBox.getHighlighter().addHighlight(index-word.length(), index, red);
-			}
-			catch(BadLocationException ble) {
-				System.out.println(ble.getMessage());
-			}
-			
-			
+	else {
+		try
+		{
+			textBox.getHighlighter().addHighlight(index-word.length(), index, red);
 		}
+		catch(BadLocationException ble) {
+			System.out.println(ble.getMessage());
+		}		
+	}
     }
    
     public static void addWordButton(SpellChecker check, String word,  LinkedStack list, LinkedStack temp) {
