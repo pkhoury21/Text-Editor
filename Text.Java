@@ -192,10 +192,10 @@ public class Text implements ActionListener{
 				index++;
 			}
 			
-			textBox.addMouseListener(new MouseAdapter() {
-				private boolean pendingPopUp = false;
-	                
-				private void maybePop(final MouseEvent mevt) {
+	textBox.addMouseListener(new MouseAdapter() {
+		private boolean pendingPopUp = false;
+
+		private void maybePop(final MouseEvent mevt) {
                     if (mevt.isPopupTrigger()) {
                         if (pendingPopUp)
                             System.err.println("A popup is already popped. Close it to pop a new one.");
@@ -219,111 +219,111 @@ public class Text implements ActionListener{
                     maybePop(mevt);
                 }
                 
-	        	private void pop(final MouseEvent mevt) {
-	        		if (SwingUtilities.isRightMouseButton(mevt)) {
-	        			try {
-	        				final StyledDocument doc = textBox.getStyledDocument();
-	                        final int offset = textBox.viewToModel(mevt.getPoint());
-	                         
-	                        //Find what word is at the location of the document where the user clicked:
-	                        final int start = Utilities.getWordStart(textBox, offset),
-	                        end = Utilities.getWordEnd(textBox, offset);
-                            
-                            //Set the selection to be that word:
-                            textBox.setSelectionStart(start);
-                            textBox.setSelectionEnd(end);
-                            
-                            final String Atword = doc.getText(start, end - start);
-                            
-                            addWordButton(check, Atword, list, temp);
+		private void pop(final MouseEvent mevt) {
+		    if (SwingUtilities.isRightMouseButton(mevt)) {
+			try {
+				final StyledDocument doc = textBox.getStyledDocument();
+				final int offset = textBox.viewToModel(mevt.getPoint());
 
-                            //Create the popup:
-                            final JPanel popupPanel = new JPanel();
+				//Find what word is at the location of the document where the user clicked:
+				final int start = Utilities.getWordStart(textBox, offset),
+				end = Utilities.getWordEnd(textBox, offset);
 
-                            //Create the words
-                            final int cnt = list.size();
-                            final ArrayList<JButton> words = new ArrayList<>();
-                            for (String string : list) {
-                                final JButton button = new JButton(string);
-                                popupPanel.add(button);
-                                words.add(button);
-                                list.pop();
-                            }
-                            
-                            final JButton addToDictionary = new JButton("Add to Dictionary");
-                            popupPanel.add(addToDictionary);
-                            
-                            final JButton ignore = new JButton("Ignore");
-                            popupPanel.add(ignore);
-                            
-                            final JButton cancel = new JButton("Cancel");
-                            popupPanel.add(cancel);
+				//Set the selection to be that word:
+				textBox.setSelectionStart(start);
+				textBox.setSelectionEnd(end);
 
-                            final Popup popup = PopupFactory.getSharedInstance().getPopup(textBox, popupPanel, mevt.getXOnScreen(), mevt.getYOnScreen());
+				final String Atword = doc.getText(start, end - start);
 
-                            //Add action listener to the word and cancel
-                            words.forEach(button -> button.addActionListener(e -> {
-                                try {
-                                    final String newWord = ((JButton) e.getSource()).getText();
-                                    
-                                    doc.remove(start, end - start);
-                                    doc.insertString(start, newWord, null);
-                                    
-                                    textBox.setCaretPosition(start + newWord.length());
-                                }
-                                catch (final BadLocationException | RuntimeException x) {
-                                    JOptionPane.showMessageDialog(textBox, "Oups!");
-                                }
-                                finally {
-                                    popup.hide();
-                                    pendingPopUp = false;
-                                }
-                            }));
-                            
-                            cancel.addActionListener(e -> {
-                                popup.hide();
-                                textBox.setSelectionStart(offset);
-                                textBox.setSelectionEnd(offset);
-                                pendingPopUp = false;
-                            });
-                            
-                            ignore.addActionListener(e -> {
-                            	try {
+				addWordButton(check, Atword, list, temp);
+
+				//Create the popup:
+				final JPanel popupPanel = new JPanel();
+
+				//Create the words
+				final int cnt = list.size();
+				final ArrayList<JButton> words = new ArrayList<>();
+				for (String string : list) {
+				final JButton button = new JButton(string);
+				popupPanel.add(button);
+				words.add(button);
+				list.pop();
+				}
+
+				final JButton addToDictionary = new JButton("Add to Dictionary");
+				popupPanel.add(addToDictionary);
+
+				final JButton ignore = new JButton("Ignore");
+				popupPanel.add(ignore);
+
+				final JButton cancel = new JButton("Cancel");
+				popupPanel.add(cancel);
+
+				final Popup popup = PopupFactory.getSharedInstance().getPopup(textBox, popupPanel, mevt.getXOnScreen(), mevt.getYOnScreen());
+
+				//Add action listener to the word and cancel
+				words.forEach(button -> button.addActionListener(e -> {
+				try {
+				    final String newWord = ((JButton) e.getSource()).getText();
+
+				    doc.remove(start, end - start);
+				    doc.insertString(start, newWord, null);
+
+				    textBox.setCaretPosition(start + newWord.length());
+				}
+				catch (final BadLocationException | RuntimeException x) {
+				    JOptionPane.showMessageDialog(textBox, "Oups!");
+				}
+				finally {
+				    popup.hide();
+				    pendingPopUp = false;
+				}
+				}));
+
+				cancel.addActionListener(e -> {
+				popup.hide();
+				textBox.setSelectionStart(offset);
+				textBox.setSelectionEnd(offset);
+				pendingPopUp = false;
+				});
+
+				ignore.addActionListener(e -> {
+				try {
 									doc.remove(start, end - start);
 									doc.insertString(start, Atword, null);
 								} catch (BadLocationException e1) {
 									e1.printStackTrace();
 								}
-                                popup.hide();
-                                textBox.setSelectionStart(offset);
-                                textBox.setSelectionEnd(offset);
-                                pendingPopUp = false;
-                            });
-                        
-                            addToDictionary.addActionListener(e -> {
-                            	check.dictionary.put(Atword, Atword);//Adds word to the dictionary...
-                            	try {
+				popup.hide();
+				textBox.setSelectionStart(offset);
+				textBox.setSelectionEnd(offset);
+				pendingPopUp = false;
+				});
+
+				addToDictionary.addActionListener(e -> {
+				check.dictionary.put(Atword, Atword);//Adds word to the dictionary...
+				try {
 									doc.remove(start, end - start);
 									doc.insertString(start, Atword, null);
 								} catch (BadLocationException e1) {
 									e1.printStackTrace();
 								}
-                                popup.hide();
-                                textBox.setSelectionStart(offset);
-                                textBox.setSelectionEnd(offset);
-                                pendingPopUp = false;
-                            });
-                            
-                            pendingPopUp = true;
-                            popup.show();
-                        }
-                        catch (final BadLocationException | RuntimeException x) {
-                            JOptionPane.showMessageDialog(textBox, "Oups! No word found?...");
-                        }
-                    }
-                }
+				popup.hide();
+				textBox.setSelectionStart(offset);
+				textBox.setSelectionEnd(offset);
+				pendingPopUp = false;
+				});
+
+				pendingPopUp = true;
+				popup.show();
+				}
+				catch (final BadLocationException | RuntimeException x) {
+				JOptionPane.showMessageDialog(textBox, "Oups! No word found?...");
+				}
+		    }
+		}
                 
-            });
+	});
 			check.clearCorrections();
 			frame.revalidate();
 		}
