@@ -191,7 +191,8 @@ public class Text implements ActionListener{
 				}
 				index++;
 			}
-			
+	//Thank you to user gthanop on StackOverflow for answering my question and teaching me the blueprint for how to make right click buttons and attaching resources to learn more 
+	//Link: https://stackoverflow.com/questions/63140840/java-swing-spell-checker 
 	textBox.addMouseListener(new MouseAdapter() {
 		private boolean pendingPopUp = false;
 
@@ -289,11 +290,11 @@ public class Text implements ActionListener{
 
 				ignore.addActionListener(e -> {
 				try {
-									doc.remove(start, end - start);
-									doc.insertString(start, Atword, null);
-								} catch (BadLocationException e1) {
-									e1.printStackTrace();
-								}
+					doc.remove(start, end - start);
+					doc.insertString(start, Atword, null);
+				} catch (BadLocationException e1) {
+					e1.printStackTrace();
+				}
 				popup.hide();
 				textBox.setSelectionStart(offset);
 				textBox.setSelectionEnd(offset);
@@ -303,11 +304,11 @@ public class Text implements ActionListener{
 				addToDictionary.addActionListener(e -> {
 				check.dictionary.put(Atword, Atword);//Adds word to the dictionary...
 				try {
-									doc.remove(start, end - start);
-									doc.insertString(start, Atword, null);
-								} catch (BadLocationException e1) {
-									e1.printStackTrace();
-								}
+					doc.remove(start, end - start);
+					doc.insertString(start, Atword, null);
+				} catch (BadLocationException e1) {
+					e1.printStackTrace();
+				}
 				popup.hide();
 				textBox.setSelectionStart(offset);
 				textBox.setSelectionEnd(offset);
